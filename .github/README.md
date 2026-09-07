@@ -206,7 +206,7 @@ Use <kbd>W</kbd> and <kbd>S</kbd> to change the order they are run in.
 **Start Ollama**: Starts Ollama service if not already started.
 
 
-**Start Proton Bridge**: Starts Proton Bridge if not already started/
+**Start Proton Bridge**: Starts Proton Bridge if not already started
 
 
 **Sync Proton**: Runs the manual sync for Proton Calendar before start.
