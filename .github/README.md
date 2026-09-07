@@ -227,7 +227,7 @@ Use <kbd>W</kbd> and <kbd>S</kbd> to change the order they are run in.
 **Close Odysseus Web UI**: Auto closes the browser window opened if using the Preflight for opening a web ui for oddysseus.
 
 
-**Purge Temps**: Purges Temp files that are corrected at `C:\Users\<User>\AppData\Local\Temp\` targeting `odysseus-app-profile`, `odysseus-tmux`, `scoped_dir*`, `playwright_*` and `pip-*`
+**Purge Temps**: Purges Temp files that are located at `C:\Users\<User>\AppData\Local\Temp\` targeting `odysseus-app-profile`, `odysseus-tmux`, `scoped_dir*`, `playwright_*` and `pip-*`
 
 
 ### Available Postflight
