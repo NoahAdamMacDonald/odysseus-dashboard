@@ -1,0 +1,28 @@
+{
+    "Options":  {
+                    "odysseus.ps1":  1,
+                    "chromadb.ps1":  2,
+                    "ollama.ps1":  3,
+                    "proton-bridge.ps1":  4,
+                    "stable-diffusion.ps1":  5,
+                    "main.ps1":  6,
+                    "sync-proton-calendar.ps1":  7,
+                    "shutdown-all.ps1":  8
+                },
+    "Preflight":  {
+                      "start-chromadb.ps1":  1,
+                      "sync-proton.ps1":  2,
+                      "cuda-env.ps1":  3,
+                      "start-proton-bridge.ps1":  4,
+                      "open-odyseus-web.ps1":  5,
+                      "backup-database.ps1":  6,
+                      "start-ollama.ps1":  7
+                  },
+    "Postflight":  {
+                       "stop-chromadb.ps1":  1,
+                       "stop-proton-bridge.ps1":  2,
+                       "purge-temp.ps1":  3,
+                       "close-odysseus-web.ps1":  4,
+                       "stop-ollama.ps1":  5
+                   }
+}

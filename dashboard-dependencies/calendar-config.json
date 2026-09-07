@@ -1,0 +1,19 @@
+{
+  "FEEDS": [
+    {
+      "name": "ProtonCalendar",
+      "url": "YOUR_PRIVATE_PROTON_ICS_URL_HERE",
+      "default_color": "#e06666"
+    },
+    {
+      "name": "CanadianHolidays",
+      "url": "https://calendar.google.com/calendar/ical/en.canadian%23holiday%40group.v.calendar.google.com/public/basic.ics",
+      "default_color": "#8fce00"
+    },
+    {
+      "name": "CanadianObservances",
+      "url": "https://calendar.google.com/calendar/ical/en.canadian.official%23holiday%40group.v.calendar.google.com/public/basic.ics",
+      "default_color": "#8fce00"
+    }
+  ]
+}
