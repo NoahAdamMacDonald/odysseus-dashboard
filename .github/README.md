@@ -8,7 +8,7 @@ Created for self use, but should be easy to add and customize to meet any basic 
 - [Options](#options)
 - [Preflight](#preflight-options)
 - [Postflight](#postflight-options)
-- [Adding New Options](#adding-options-preflights-postflights)
+- [Adding New Options](#adding-options--preflights--postflights)
 
 
 ## Setup
