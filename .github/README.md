@@ -23,8 +23,9 @@ Default File Layout
 ├── dashboard-settings.ps1
 ├── dashboard.ps1
 ├── order.json
-├── README.md
 ├── run-dashboard.bat
+├── .github/
+│   ├── README.md
 ├── dashboard-dependencies/
 │   ├── calendar-config.json
 │   ├── create_portable.py
