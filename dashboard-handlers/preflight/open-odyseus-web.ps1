@@ -50,10 +50,10 @@ $rawHost = if ($svc) { $svc.Host } else { "127.0.0.1" }
 $browserHost = if ($rawHost -eq "0.0.0.0") { "127.0.0.1" } else { $rawHost }
 $url = "http://${browserHost}:${port}"
 
-# Dedicated profile path forces process isolation from main browser instances
-$profileDir = "$env:TEMP\odysseus-app-profile"
+# Persistent login session
+$profileDir = "$env:LOCALAPPDATA\Odysseus\browser-profile"
 
-# Poll port using loopback address until service accepts connections (up to 10s)
+# Poll port using loopback address until service accepts connections
 $maxRetries = 20
 while ($maxRetries -gt 0) {
     $client = New-Object System.Net.Sockets.TcpClient
