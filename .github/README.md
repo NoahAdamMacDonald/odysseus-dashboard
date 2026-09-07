@@ -270,10 +270,11 @@ $asciiModule = Join-Path -Path $PSScriptRoot -ChildPath "dashboard-templates\asc
 if (Test-Path $asciiModule) {
     . $asciiModule
 } else {
-
-#Writes ASCII
 Write-Warning "ASCII Header module not found at: $asciiModule"
+}
 
+#Write Heading
+Write-AsciiHeader -Name "<name>" -ForegroundColor <Colour>
 ```
 
 add new ASCII art by adding `.txt` files to `dashboard-templates/ascii/headers/` folder, will use the filename as the ascii name.
