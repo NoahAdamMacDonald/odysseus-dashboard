@@ -1,0 +1,21 @@
+# Status & Runtime Log Files
+*.status
+*.log
+proton_sync.status
+portable.status
+
+# Generated Packages & Temp Folders
+/portable-odysseus/
+/temp/
+
+# Python Cache & Virtual Environments
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+
+# OS / Editor Artifacts
+.vscode/
+.idea/
+Thumbs.db
+Desktop.ini
