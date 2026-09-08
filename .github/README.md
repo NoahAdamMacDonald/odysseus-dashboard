@@ -23,8 +23,9 @@ Default File Layout
 ├── dashboard-settings.ps1
 ├── dashboard.ps1
 ├── order.json
-├── README.md
 ├── run-dashboard.bat
+├── .github/
+│   ├── README.md
 ├── dashboard-dependencies/
 │   ├── calendar-config.json
 │   ├── create_portable.py
@@ -180,7 +181,8 @@ Use <kbd>W</kbd> and <kbd>S</kbd> to change the order they are run in.
 
 ### Default Preflight
 
-**Open Odysseus Web UI**: Opens Odysseus AI as a webui using your default browser when possible. 
+**Open Odysseus Web UI**: Opens Odysseus AI as a webui using your default browser when possible.
+Stores browser profile at `C:\Users\<User>\AppData\Local\Odysseus\browser-profile`
 
 - Supports browsers:
 - Edge
