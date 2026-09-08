@@ -25,7 +25,7 @@ Default File Layout
 ├── order.json
 ├── run-dashboard.bat
 ├── .github/
-│   ├── README.md
+│   └── README.md
 ├── dashboard-dependencies/
 │   ├── calendar-config.json
 │   ├── create_portable.py
