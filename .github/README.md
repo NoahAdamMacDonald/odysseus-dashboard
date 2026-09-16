@@ -39,6 +39,7 @@ Default File Layout
 │   ├── postflight-disabled/
 │   │   ├── stop-chromadb.ps1
 │   │   ├── stop-ollama.ps1
+│   │   ├── stop-tailscale.ps1
 │   │   └── stop-proton-bridge.ps1
 │   ├── preflight/
 │   │   ├── backup-database.ps1
@@ -47,6 +48,7 @@ Default File Layout
 │       ├── cuda-env.ps1
 │       ├── start-chromadb.ps1
 │       ├── start-ollama.ps1
+│       ├── start-tailscale.ps1
 │       ├── start-proton-bridge.ps1
 │       └── sync-proton.ps1
 ├── dashboard-options/
@@ -62,6 +64,7 @@ Default File Layout
 │   ├── ollama.ps1
 │   ├── proton-bridge.ps1
 │   ├── stable-diffusion.ps1
+│   ├── tailscale.ps1
 │   └── sync-proton-calendar.ps1
 ├── dashboard-services/
 │   ├── OdysseusLauncher.ps1
@@ -164,6 +167,10 @@ Opening the manager with Ollama disabled will cause Ollama to be auto-started.
 **Stable Diffusion**: Runs stable-diffusion-3.5-medium, requires NVidia GPU with CUDA support due to `set CUDA_VISIBLE_DEVICES=0`
 
 
+
+**Tail Scale**: Starts Tailscale service and connects to it. 
+
+
 **Sync Proton Calendar**: Runs a one-way sync to from Proton Calendar to Odysseus Calendar, comes with support for Canadian Holidays. Added to allow Proton Calendar users to
 sync their calendar to Odysseus
 > [!NOTE]
@@ -217,6 +224,9 @@ Stores browser profile at `C:\Users\<User>\AppData\Local\Odysseus\browser-profil
 **Start Chromadb**: Starts the chromadb added by the Chromadb option. Not meant to be used if using the Odysseus AI chromadb default.
 
 
+**Start Tailscale**: Starts Tailscale service if not already started.
+
+
 ## Postflight Options
 Postflight options will always be run after stopping Odysseus when stopped using the dashboard or when using the shutdown all option.
 
@@ -238,6 +248,10 @@ Use <kbd>W</kbd> and <kbd>S</kbd> to change the order they are run in.
 
 
 **Stop Ollama**: Stops Ollama service.
+
+
+
+**Stop Tailscale**: Stops Tailscale service.
 
 
 **Stop Proton Bridge**: Stops Proton Bridge.
