@@ -9,8 +9,8 @@ $Global:DashboardConfig = @{
     VenvPython = Join-Path $RootDir "venv\Scripts\python.exe"
     
     Services   = @{
-        Odysseus        = @{ Name = "Odysseus App";        Port = 7000;  Host = "127.0.0.1"; NamedProcesses = @() }
-        StableDiffusion = @{ Name = "Stable Diffusion";    Port = 8000;  Host = "127.0.0.1"; NamedProcesses = @() }
+        Odysseus        = @{ Name = "Odysseus App";        Port = 7000;  Host = "127.0.0.1";	BindHost="0.0.0.0"; NamedProcesses = @() }
+        StableDiffusion = @{ Name = "Stable Diffusion";    Port = 8001;  Host = "127.0.0.1"; NamedProcesses = @() }
         ChromaDB        = @{ 
             Name        = "ChromaDB Service"
             Port        = 8100
@@ -19,8 +19,9 @@ $Global:DashboardConfig = @{
             DataPath    = Join-Path $RootDir "chroma_data"
             NamedProcesses = @()
         }
-        Ollama          = @{ Name = "Ollama";              Port = 11434; Host = "127.0.0.1"; NamedProcesses = @("ollama", "ollama_llama_server") }
+        Ollama          = @{ Name = "Ollama";              Port = 11434; Host = "127.0.0.1"; 	BindHost="0.0.0.0"; NamedProcesses = @("ollama", "ollama_llama_server") }
         ProtonBridge    = @{ Name = "Proton Mail Bridge";  Port = 1143;  Host = "127.0.0.1"; NamedProcesses = @("proton-bridge", "bridge") }
+		Tailscale       = @{ Name = "Tailscale Mesh VPN";  Port = 41112; Host = "127.0.0.1"; NamedProcesses = @("tailscale", "tailscaled") }
     }
 }
 

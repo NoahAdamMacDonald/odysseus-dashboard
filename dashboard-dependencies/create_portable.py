@@ -2,8 +2,31 @@ import os
 import json
 import socket
 import datetime
+import subprocess
+import shutil
 
 def get_local_ip():
+    # 1. Try to fetch Tailscale IPv4 address first
+    tailscale_bin = shutil.which("tailscale")
+    if not tailscale_bin and os.name == "nt":
+        default_ts_path = r"C:\Program Files\Tailscale\tailscale.exe"
+        if os.path.exists(default_ts_path):
+            tailscale_bin = default_ts_path
+
+    if tailscale_bin:
+        try:
+            res = subprocess.run(
+                [tailscale_bin, "ip", "-4"], 
+                capture_output=True, 
+                text=True, 
+                timeout=2
+            )
+            if res.returncode == 0 and res.stdout.strip():
+                return res.stdout.strip()
+        except Exception:
+            pass
+
+    # 2. Fall back to LAN IP if Tailscale is offline
     try:
         s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         s.connect(("8.8.8.8", 80))
@@ -25,6 +48,13 @@ def main():
         ip = get_local_ip()
         port = 7000
 
+        # Copy Icon File
+        icon_src = os.path.join(dep_dir, "icons", "start-icon.ico")
+        icon_dest_dir = os.path.join(output_dir, "icons")
+        if os.path.exists(icon_src):
+            os.makedirs(icon_dest_dir, exist_ok=True)
+            shutil.copy2(icon_src, os.path.join(icon_dest_dir, "start-icon.ico"))
+
         # Write portable-config.json
         config_data = {
             "DefaultHostIP": ip,
@@ -38,6 +68,59 @@ def main():
         bat_content = "@echo off\r\npowershell -ExecutionPolicy Bypass -File \"%~dp0open-remote.ps1\"\r\n"
         with open(os.path.join(output_dir, "run-remote.bat"), "w", encoding="utf-8") as f:
             f.write(bat_content)
+
+        # Write create-shortcut.bat (Hybrid Batch / PowerShell script)
+        shortcut_bat_content = r'''<# :
+@echo off
+set "PROJECT_DIR=%~dp0"
+powershell.exe -NoProfile -ExecutionPolicy Bypass -Command "iex (Get-Content -LiteralPath '%~f0' -Raw)"
+exit /b
+#>
+
+# Resolve project root from the batch environment variable
+$projectRoot = $env:PROJECT_DIR.TrimEnd('\')
+
+$targetPath   = Join-Path -Path $projectRoot -ChildPath "run-remote.bat"
+$iconPath     = Join-Path -Path $projectRoot -ChildPath "icons\start-icon.ico"
+$workingDir   = $projectRoot
+$shortcutName = "Odysseus Remote.lnk"
+
+# Resolve user's Desktop directory
+$desktopFolder = [System.Environment]::GetFolderPath([System.Environment+SpecialFolder]::Desktop)
+$shortcutPath  = Join-Path -Path $desktopFolder -ChildPath $shortcutName
+
+# Verify target script exists
+if (-not (Test-Path $targetPath)) {
+    Write-Warning "Target batch file not found at: $targetPath"
+}
+
+try {
+    $wshShell = New-Object -ComObject WScript.Shell
+    $shortcut = $wshShell.CreateShortcut($shortcutPath)
+
+    $shortcut.TargetPath       = $targetPath
+    $shortcut.WorkingDirectory = $workingDir
+    $shortcut.Description      = "Launch Odysseus Remote Service"
+
+    if (Test-Path $iconPath) {
+        $shortcut.IconLocation = $iconPath
+    } else {
+        Write-Warning "Icon file not found at $iconPath. Falling back to default executable icon."
+    }
+
+    $shortcut.Save()
+
+    Write-Host "`nSuccessfully created desktop shortcut:" -ForegroundColor Green
+    Write-Host " $shortcutPath`n" -ForegroundColor Cyan
+} catch {
+    Write-Error "Failed to create desktop shortcut: $_"
+}
+
+Write-Host "Press any key to exit..." -ForegroundColor DarkGray
+$null = $Host.UI.RawUI.ReadKey("NoEcho,IncludeKeyDown")
+'''
+        with open(os.path.join(output_dir, "create-shortcut.bat"), "w", encoding="utf-8") as f:
+            f.write(shortcut_bat_content.replace("\n", "\r\n"))
 
         # Write open-remote.ps1
         ps_script = '''# ==============================================================================

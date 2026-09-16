@@ -85,6 +85,9 @@ $OllamaExe = if ($OllamaCmd) { $OllamaCmd.Source } else { Join-Path $env:LocalAp
             Write-Host "`n  Launching $($svc.Name)..." -ForegroundColor Green
             
             if (Test-Path $OllamaExe) {
+				$bindHost = if ($svc.BindHost) { $svc.BindHost } else { "127.0.0.1" }
+                $env:OLLAMA_HOST = "${bindHost}:$($svc.Port)"
+				
                 Start-Process -FilePath $OllamaExe -ArgumentList "serve" -WindowStyle Hidden -WorkingDirectory $cfg.RootDir
 
                 if (Get-Command "Wait-ForPortOnline" -ErrorAction SilentlyContinue) {

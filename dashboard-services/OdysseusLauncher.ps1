@@ -14,7 +14,7 @@ $ServicesDir = if ($PSScriptRoot) { $PSScriptRoot } else { Split-Path -Parent $M
 $global:OdysseusWorkDir = if ($cfg -and $cfg.RootDir) { $cfg.RootDir } else { Split-Path $ServicesDir -Parent }
 
 # Bind host and port configurations linked to central DashboardConfig
-$global:OdysseusBindHost = "0.0.0.0"
+$global:OdysseusBindHost = if ($cfg -and $cfg.Services.Odysseus.BindHost) { $cfg.Services.Odysseus.BindHost } else { "127.0.0.1" }
 $global:OdysseusPort     = if ($cfg -and $cfg.Services.Odysseus) { $cfg.Services.Odysseus.Port } else { 7000 }
 $global:SDPort           = if ($cfg -and $cfg.Services.StableDiffusion) { $cfg.Services.StableDiffusion.Port } else { 8000 }
 $global:ChromaPort       = if ($cfg -and $cfg.Services.ChromaDB) { $cfg.Services.ChromaDB.Port } else { 8100 }

@@ -110,6 +110,9 @@ $OrderFile     = Join-Path $cfg.RootDir "order.json"
             }
 
             Write-Host "`n  Launching $($svc.Name)..." -ForegroundColor Green
+			
+			$bindHost = if ($svc.BindHost) { $svc.BindHost } else { $svc.Host }
+			
             Start-Process powershell.exe -ArgumentList "-ExecutionPolicy Bypass -File `"$LaunchScript`" -Port $($svc.Port) -BindHost $($svc.Host)" -WorkingDirectory $cfg.RootDir
 
             if (Get-Command "Wait-ForPortOnline" -ErrorAction SilentlyContinue) {

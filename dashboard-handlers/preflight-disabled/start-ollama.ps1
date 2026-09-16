@@ -29,6 +29,10 @@ if (-not $online) {
 
     if (Test-Path $OllamaExe) {
         $rootDir = if ($Global:DashboardConfig) { $Global:DashboardConfig.RootDir } else { $PSScriptRoot }
+		
+		$bindHost = if ($svc.BindHost) { $svc.BindHost } else { "127.0.0.1" }
+        $env:OLLAMA_HOST = "${bindHost}:$($svc.Port)"
+		
         Start-Process -FilePath $OllamaExe -ArgumentList "serve" -WindowStyle Hidden -WorkingDirectory $rootDir
 
         if (Get-Command Wait-ForPortOnline -ErrorAction SilentlyContinue) {
