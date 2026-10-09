@@ -234,9 +234,6 @@ function global:Show-OllamaModelManager {
                     $ollamaExe = Get-OllamaExePath
 
                     if (Test-Path $ollamaExe) {
-						$bindHost = if ($svc -and $svc.BindHost) { $svc.BindHost } else { "127.0.0.1" }
-						$env:OLLAMA_HOST = "${bindHost}:$port"
-						
                         Start-Process -FilePath $ollamaExe -ArgumentList "serve" -WindowStyle Hidden
 
                         if (Get-Command "Wait-ForPortOnline" -ErrorAction SilentlyContinue) {
