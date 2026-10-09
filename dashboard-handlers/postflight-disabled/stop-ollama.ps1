@@ -10,7 +10,11 @@ if (-not $Global:DashboardConfig) {
 
 $svc = $Global:DashboardConfig.Services.Ollama
 $port = if ($svc) { $svc.Port } else { 11434 }
-$hostName = if ($svc) { $svc.Host } else { "127.0.0.1" }
+
+# Connect to 127.0.0.1 for local health probes if Host is set to 0.0.0.0
+$rawHost = if ($svc) { $svc.Host } else { "127.0.0.1" }
+$testHost = if ($rawHost -eq "0.0.0.0") { "127.0.0.1" } else { $rawHost }
+
 $namedProcesses = if ($svc -and $svc.NamedProcesses) { $svc.NamedProcesses } else { @("ollama", "ollama_llama_server") }
 
 # Kill owning process on port 11434
@@ -34,7 +38,7 @@ if (Get-Command Wait-ForPortOffline -ErrorAction SilentlyContinue) {
     while ($elapsed -lt 10) {
         $test = New-Object System.Net.Sockets.TcpClient
         try {
-            $async = $test.BeginConnect($hostName, $port, $null, $null)
+            $async = $test.BeginConnect($testHost, $port, $null, $null)
             if (-not $async.AsyncWaitHandle.WaitOne(300, $false)) { $test.Close(); break }
         } catch { break } finally { $test.Close() }
         Start-Sleep -Seconds 1

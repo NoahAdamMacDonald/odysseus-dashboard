@@ -29,6 +29,8 @@ $svc = $cfg.Services.Ollama
 $OptionId    = "ollama"
 $MaxWaitSec  = 15
 
+$testHost = if ($svc.Host -eq "0.0.0.0") { "127.0.0.1" } else { $svc.Host }
+
 $OllamaCmd = Get-Command "ollama" -ErrorAction SilentlyContinue
 $OllamaExe = if ($OllamaCmd) { $OllamaCmd.Source } else { Join-Path $env:LocalAppData "Programs\Ollama\ollama.exe" }
 
@@ -40,7 +42,7 @@ $OllamaExe = if ($OllamaCmd) { $OllamaCmd.Source } else { Join-Path $env:LocalAp
     Order     = $OptionOrder
 
     GetStatus = ({
-        $online = Test-PortFast -hostName $svc.Host -port $svc.Port
+        $online = Test-PortFast -hostName $testHost -port $svc.Port
         $statusStr = if ($online) { 
             "  [ ONLINE  ] $($svc.Name.PadRight(25)) (Port $($svc.Port))" 
         } else { 
@@ -50,11 +52,11 @@ $OllamaExe = if ($OllamaCmd) { $OllamaCmd.Source } else { Join-Path $env:LocalAp
     }).GetNewClosure()
 
     GetState  = ({
-        if (Test-PortFast -hostName $svc.Host -port $svc.Port) { return "STOP" } else { return "START" }
+        if (Test-PortFast -hostName $testHost -port $svc.Port) { return "STOP" } else { return "START" }
     }).GetNewClosure()
 
     Execute   = ({
-        $online = Test-PortFast -hostName $svc.Host -port $svc.Port
+        $online = Test-PortFast -hostName $testHost -port $svc.Port
 
         if ($online) {
             Write-Host "`n  Stopping $($svc.Name)..." -ForegroundColor Yellow
@@ -74,7 +76,7 @@ $OllamaExe = if ($OllamaCmd) { $OllamaCmd.Source } else { Join-Path $env:LocalAp
                 Wait-ForPortOffline -port $svc.Port -serviceName $svc.Name -maxSeconds 10
             } else {
                 $elapsed = 0
-                while ((Test-PortFast -hostName $svc.Host -port $svc.Port) -and ($elapsed -lt 10)) {
+                while ((Test-PortFast -hostName $testHost -port $svc.Port) -and ($elapsed -lt 10)) {
                     Start-Sleep -Seconds 1
                     $elapsed++
                 }
@@ -85,13 +87,16 @@ $OllamaExe = if ($OllamaCmd) { $OllamaCmd.Source } else { Join-Path $env:LocalAp
             Write-Host "`n  Launching $($svc.Name)..." -ForegroundColor Green
             
             if (Test-Path $OllamaExe) {
+                $bindHost = if ($svc.BindHost) { $svc.BindHost } else { $svc.Host }
+                $env:OLLAMA_HOST = "${bindHost}:$($svc.Port)"
+                
                 Start-Process -FilePath $OllamaExe -ArgumentList "serve" -WindowStyle Hidden -WorkingDirectory $cfg.RootDir
 
                 if (Get-Command "Wait-ForPortOnline" -ErrorAction SilentlyContinue) {
                     Wait-ForPortOnline -port $svc.Port -serviceName $svc.Name -maxSeconds $MaxWaitSec
                 } else {
                     $elapsed = 0
-                    while (-not (Test-PortFast -hostName $svc.Host -port $svc.Port) -and ($elapsed -lt $MaxWaitSec)) {
+                    while (-not (Test-PortFast -hostName $testHost -port $svc.Port) -and ($elapsed -lt $MaxWaitSec)) {
                         Start-Sleep -Seconds 1
                         $elapsed++
                     }

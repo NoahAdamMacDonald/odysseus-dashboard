@@ -40,7 +40,12 @@ if (Test-Path $subDirPath) {
 $OptionId    = "manage-ollama-models"
 $ViewTitle   = "Manage Ollama Models"
 
-$TargetHost  = if ($svc -and $svc.Host) { $svc.Host } else { "127.0.0.1" }
+$TargetHost  = $TargetHost = if ($svc.Host -eq "0.0.0.0") {
+			"127.0.0.1"
+		}
+		else {
+			$svc.Host
+		}
 $TargetPort  = if ($svc -and $svc.Port) { $svc.Port } else { 11434 }
 
 function global:Get-OllamaExePath {
@@ -234,6 +239,9 @@ function global:Show-OllamaModelManager {
                     $ollamaExe = Get-OllamaExePath
 
                     if (Test-Path $ollamaExe) {
+						$bindHost = if ($svc.BindHost) { $svc.BindHost } else { $svc.Host }
+						$env:OLLAMA_HOST = "${bindHost}:$($svc.Port)"
+						
                         Start-Process -FilePath $ollamaExe -ArgumentList "serve" -WindowStyle Hidden
 
                         if (Get-Command "Wait-ForPortOnline" -ErrorAction SilentlyContinue) {
